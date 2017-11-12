@@ -1,0 +1,41 @@
+"Core_Data_Presentation_Outline"
+
+1.) What is Core Data?
+	* Core Data is a framework that you use to manage the model layer objects in your application. - Apple
+	* Core Data is an object graph and persistence framework provided by Apple in the macOS and iOS operating systems. - Wikipedia
+	* At its heart, Core Data is an object graph manager with lifecycle, searching and persistence features. - CocoaWithLove
+	* Core Data is a framework to help persist data - Kefbytes
+2.) The Core Data Stack
+3.) Core Data - Pre Swift 3: Apple
+4.) Core Data - Pre Swift 3: Marcus Zarra
+5.) Core Data - Swift 3
+6.) Core Data in action
+7.) Wrapup
+8.) Questions/Discussion
+
+
+Private Queue Context - Writing to disk should be asynchronous to the UI
+Main Queue Context - NSManagedObjectContext that the application will use for all user interaction (Single Source of Truth)
+Don't set up the Core Data Stack in App Delegate
+Use a call back when setting uo stack so UI can be completed once the stack is setup
+
+An external persistent store that contains saved records.
+A persistent object store that maps between records in the store and objects in your application.
+A persistent store coordinator that aggregates all the stores.
+A managed object model that describes the entities in the stores.
+A managed object context that provides a scratch pad for managed objects.
+
+
+    func saveContext () {
+//        let context = persistentContainer.newBackgroundContext()
+        persistentContainer.performBackgroundTask({ (context) in
+            if context.hasChanges {
+                do {
+                    try context.save()
+                } catch {
+                    let nserror = error as NSError
+                    fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                }
+            }
+        })
+    }
